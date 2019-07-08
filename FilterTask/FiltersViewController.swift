@@ -33,8 +33,7 @@ class FiltersViewController: UIViewController {
             if let outputImage = outputImage {
                 let cgImage : CGImage? = context.createCGImage(outputImage, from: outputImage.extent)!
                 
-                if let cg = cgImage
-                {
+                if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
                     DispatchQueue.main.async {
@@ -59,8 +58,7 @@ class FiltersViewController: UIViewController {
             if let outputImage = outputImage {
                 let cgImage : CGImage? = context.createCGImage(outputImage, from: outputImage.extent)!
                 
-                if let cg = cgImage
-                {
+                if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
                     DispatchQueue.main.async {
@@ -85,8 +83,7 @@ class FiltersViewController: UIViewController {
             if let outputImage = outputImage {
                 let cgImage : CGImage? = context.createCGImage(outputImage, from: outputImage.extent)!
                 
-                if let cg = cgImage
-                {
+                if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
                     DispatchQueue.main.async {
