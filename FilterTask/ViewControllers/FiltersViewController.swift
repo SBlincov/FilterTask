@@ -11,22 +11,113 @@ import CoreImage
 
 class FiltersViewController: UIViewController {
     @IBOutlet weak var takenImage: UIImageView!
+    @IBOutlet weak var originalFilterButton: UIButton!
+    @IBOutlet weak var gaussianBlurFilterButton: UIButton!
+    @IBOutlet weak var sepiaFilterButton: UIButton!
+    @IBOutlet weak var medianFilterButton: UIButton!
     
-    @IBAction func applyOriginalImage(_ sender: UIButton) {
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        if let imgData = ImageModel.imageData {
+            ImageModel.modifiedImage = UIImage(data: imgData)!.fixOrientation()
+            takenImage.image = UIImage(data: imgData)!.fixOrientation()
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+        
+        
+        
         if let img = ImageModel.imageData {
-            ImageModel.modifiedImage = UIImage(data: img)?.fixOrientation()
-            takenImage.image = ImageModel.modifiedImage
+            originalFilterButton.setBackgroundImage(UIImage(data: img), for: .normal)
+        }
+        applySepiaFilter {
+            DispatchQueue.main.async {
+                self.sepiaFilterButton.imageView?.contentMode = .scaleAspectFill
+                self.sepiaFilterButton.setBackgroundImage(ImageModel.modifiedImage, for: .normal)
+            }
+        }
+        applyGaussianBlurFilter {
+            DispatchQueue.main.async {
+                self.gaussianBlurFilterButton.imageView?.contentMode = .scaleAspectFill
+                self.gaussianBlurFilterButton.setBackgroundImage(ImageModel.modifiedImage, for: .normal)
+            }
+        }
+        applyMedianFilter {
+            DispatchQueue.main.async {
+                self.medianFilterButton.imageView?.contentMode = .scaleAspectFill
+                self.medianFilterButton.setBackgroundImage(ImageModel.modifiedImage, for: .normal)
+            }
         }
     }
-    @IBAction func applyGaussianBlurFilter(_ sender: UIButton) {
+    
+    
+    
+    @IBAction func originalButtonPressed(_ sender: UIButton) {
+        takenImage.image = getOriginalImage()
+    }
+    
+    @IBAction func gaussianBlurButtonPressed(_ sender: UIButton) {
+        self.applyGaussianBlurFilter {
+            DispatchQueue.main.async {
+                self.takenImage.image = ImageModel.modifiedImage
+            }
+        }
+    }
+    
+    @IBAction func medianButtonPressed(_ sender: UIButton) {
+        self.applyMedianFilter {
+            DispatchQueue.main.async {
+                self.takenImage.image = ImageModel.modifiedImage
+            }
+        }
+    }
+    
+    @IBAction func sepiaButtonPressed(_ sender: UIButton) {
+        self.applySepiaFilter {
+            DispatchQueue.main.async {
+                self.takenImage.image = ImageModel.modifiedImage
+            }
+        }
+    }
+    
+    @IBAction func shareButtonPressed(_ sender: UIButton) {
+        if let img = ImageModel.modifiedImage {
+            var filesToShare = [Any]()
+            filesToShare.append(img)
+            let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
+            self.present(activityViewController, animated: true, completion: nil)
+        }
+    }
+    
+    @IBAction func newPhotoButtonPressed(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    
+    
+    
+    func getOriginalImage() -> UIImage? {
+        if let img = ImageModel.imageData {
+            ImageModel.modifiedImage = UIImage(data: img)?.fixOrientation()
+            return ImageModel.modifiedImage!
+        }
+        return nil
+    }
+    
+    func applyGaussianBlurFilter(completion:@escaping () -> ()) {
         DispatchQueue.global().async {
-            // Force because in viewDidAppear checking imageData
             guard let myImageView = UIImage(data: ImageModel.imageData!)?.fixOrientation() else { return }
             guard let cg = myImageView.cgImage else { return }
             
             let beginImage = CIImage(cgImage: cg)
             let context : CIContext = CIContext(options: nil)
-            let inputParams : [String : Any]? = [kCIInputImageKey : beginImage, kCIInputRadiusKey: 5.0]
+            let inputParams : [String : Any]? = [kCIInputImageKey : beginImage, kCIInputRadiusKey: 1.0]
             let filter : CIFilter = CIFilter(name: "CIGaussianBlur", parameters: inputParams)!
             let outputImage : CIImage? = filter.outputImage!
             
@@ -36,16 +127,14 @@ class FiltersViewController: UIViewController {
                 if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
-                    DispatchQueue.main.async {
-                        self.takenImage.image = newImage
-                    }
+                    completion()
                 }
             }
         }
     }
-    @IBAction func applyMedianFilter(_ sender: UIButton) {
+    
+    func applyMedianFilter(completion:@escaping () -> ()) {
         DispatchQueue.global().async {
-            // Force because in viewDidAppear checking imageData
             guard let myImageView = UIImage(data: ImageModel.imageData!)?.fixOrientation() else { return }
             guard let cg = myImageView.cgImage else { return }
             
@@ -61,16 +150,14 @@ class FiltersViewController: UIViewController {
                 if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
-                    DispatchQueue.main.async {
-                        self.takenImage.image = newImage
-                    }
+                    completion()
                 }
             }
         }
     }
-    @IBAction func applySepiaFilter(_ sender: UIButton) {
+    
+    func applySepiaFilter(completion:@escaping () -> ()) {
         DispatchQueue.global().async {
-            // Force because in viewDidAppear checking imageData
             guard let myImageView = UIImage(data: ImageModel.imageData!)?.fixOrientation() else { return }
             guard let cg = myImageView.cgImage else { return }
             
@@ -86,42 +173,14 @@ class FiltersViewController: UIViewController {
                 if let cg = cgImage {
                     let newImage = UIImage(cgImage: cg).fixOrientation()
                     ImageModel.modifiedImage = newImage
-                    DispatchQueue.main.async {
-                        self.takenImage.image = newImage
-                    }
+                    completion()
                 }
             }
         }
     }
-    @IBAction func shareButtonPressed(_ sender: UIButton) {
-        if let img = ImageModel.modifiedImage {
-            var filesToShare = [Any]()
-            filesToShare.append(img)
-            let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-            self.present(activityViewController, animated: true, completion: nil)
-        }
-    }
-    
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if let imgData = ImageModel.imageData {
-            ImageModel.modifiedImage = UIImage(data: imgData)!.fixOrientation()
-            takenImage.image = UIImage(data: imgData)!.fixOrientation()
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    
 }
+
+
 
 public extension UIImage {
     /// Extension to fix orientation of an UIImage without EXIF

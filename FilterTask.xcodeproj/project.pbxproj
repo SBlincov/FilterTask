@@ -59,15 +59,47 @@
 			isa = PBXGroup;
 			children = (
 				E5CC941422D347F20031DC9F /* AppDelegate.swift */,
-				E5CC941622D347F20031DC9F /* CameraViewController.swift */,
-				E5CC941822D347F20031DC9F /* Main.storyboard */,
-				E5CC941B22D347F30031DC9F /* Assets.xcassets */,
-				E5CC941D22D347F30031DC9F /* LaunchScreen.storyboard */,
-				E5CC942022D347F30031DC9F /* Info.plist */,
-				E5CC942622D34F920031DC9F /* ImageModel.swift */,
-				E5CC942822D350340031DC9F /* FiltersViewController.swift */,
+				E5EDFBFA22D4C7DD00288A01 /* Views */,
+				E5EDFBF822D4C7C200288A01 /* ViewControllers */,
+				E5EDFBF922D4C7D700288A01 /* Models */,
+				E5EDFBFB22D4C7EA00288A01 /* Supporting */,
 			);
 			path = FilterTask;
+			sourceTree = "<group>";
+		};
+		E5EDFBF822D4C7C200288A01 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				E5CC941622D347F20031DC9F /* CameraViewController.swift */,
+				E5CC942822D350340031DC9F /* FiltersViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		E5EDFBF922D4C7D700288A01 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E5CC942622D34F920031DC9F /* ImageModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E5EDFBFA22D4C7DD00288A01 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E5CC941822D347F20031DC9F /* Main.storyboard */,
+				E5CC941D22D347F30031DC9F /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E5EDFBFB22D4C7EA00288A01 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				E5CC941B22D347F30031DC9F /* Assets.xcassets */,
+				E5CC942022D347F30031DC9F /* Info.plist */,
+			);
+			path = Supporting;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -292,7 +324,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PBPX848E2V;
-				INFOPLIST_FILE = FilterTask/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/FilterTask/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,7 +342,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PBPX848E2V;
-				INFOPLIST_FILE = FilterTask/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/FilterTask/Supporting/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
